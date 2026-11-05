@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #9f1d20;
+  --color-brand-dark: #6e1316;
+  --color-crust: #f6efe4;
+  --color-ink: #2b2118;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  @apply bg-crust text-ink font-sans antialiased;
+}
