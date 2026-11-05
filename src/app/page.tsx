@@ -1,23 +1,16 @@
-import { Suspense } from "react";
 import MenuExplorer from "@/components/MenuExplorer";
 import { getFavoriteIds, getPizzas } from "@/lib/data";
 
-export default function MenuPage() {
+export default async function MenuPage() {
+  // Same for every visitor: cached, so it becomes part of the static shell
+  const pizzas = await getPizzas();
+  // Changes all the time: not awaited, the promise streams to the browser
+  const favoriteIdsPromise = getFavoriteIds();
+
   return (
     <section>
       <h1 className="mb-6 text-3xl font-black">Menu</h1>
-      <Suspense fallback={<p className="py-16 text-center text-lg">Memuat menu…</p>}>
-        <Menu />
-      </Suspense>
+      <MenuExplorer pizzas={pizzas} favoriteIdsPromise={favoriteIdsPromise} />
     </section>
   );
-}
-
-// Runs only on the server: reads the database directly, no API round trip
-async function Menu() {
-  const [pizzas, favoriteIds] = await Promise.all([
-    getPizzas(),
-    getFavoriteIds(),
-  ]);
-  return <MenuExplorer pizzas={pizzas} initialFavoriteIds={favoriteIds} />;
 }

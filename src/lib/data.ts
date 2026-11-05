@@ -1,4 +1,5 @@
 import "server-only";
+import { cacheLife, cacheTag } from "next/cache";
 import { all, get, run } from "./db";
 import { simulateLatency } from "./demo";
 import type { Pizza, PizzaSize, RatingSummary } from "./types";
@@ -32,6 +33,9 @@ const PIZZA_COLUMNS =
   "pizza_type_id AS id, name, category, ingredients AS description";
 
 export async function getPizzas(): Promise<Pizza[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("menu");
   await simulateLatency("read");
   const [rows, prices] = await Promise.all([
     all<PizzaRow>(`SELECT ${PIZZA_COLUMNS} FROM pizza_types ORDER BY name`),
